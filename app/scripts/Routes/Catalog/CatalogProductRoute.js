@@ -8,7 +8,7 @@ Webster.CatalogProductRoute = Webster.AbstractRoute.extend({
             products.addObject(Webster.Product.create());
             Webster.Session.set('productCollection', products);
         }
-        Webster.MessageProcessor.processOutgoing({'type': 'Catalog\\Category', 'action': 'getAll'});
+        Webster.MessageProcessor.processOutgoing({'type': 'Catalog\\Category', 'action': 'get'});
         console.log('catalog product route');
     }
 });

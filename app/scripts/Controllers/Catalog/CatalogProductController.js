@@ -46,8 +46,10 @@ Webster.CatalogProductController = Ember.ObjectController.extend({
                 }});
             }
 
+            if(!productId) productId = '';
+
             Webster.MessageProcessor.processOutgoing({'type': 'Catalog\\Product', 'action': 'save', 'content': {
-                'id': this.get('product').id,
+                'id': productId,
                 'name': this.get('product').name,
                 'description': this.get('product').description,
                 'price': this.get('product').price,
