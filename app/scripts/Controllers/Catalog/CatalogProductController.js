@@ -25,28 +25,35 @@ Webster.CatalogProductController = Ember.ObjectController.extend({
             var categories = Webster.Session.get('categoryCollection');
             var productId = this.get('product').id;
 
-            for(i = 0; i < categories.length; i++){
-                var productIds = categories[i].products;
+            if(productId){
+                for(i = 0; i < categories.length; i++){
+                    var productIds = categories[i].products;
 
-                if(categories[i].checked){
-                    productIds.push(productId);
-                } else {
-                    for(j = 0; j < productIds.length; j++){
-                        if(productIds[j] == productId){
-                            productIds.splice(j, 1);
+                    if(categories[i].checked){
+                        productIds.push(productId);
+                    } else {
+                        for(j = 0; j < productIds.length; j++){
+                            if(productIds[j] == productId){
+                                productIds.splice(j, 1);
+                            }
                         }
                     }
+                    categories[i].products = jQuery.unique(productIds);
+                    Webster.MessageProcessor.processOutgoing({'type': 'Catalog\\Category', 'action': 'save', 'content': {
+                        'id': categories[i].id,
+                        'name': categories[i].name,
+                        'products': categories[i].products,
+                        'active': categories[i].active
+                    }});
                 }
-                categories[i].products = jQuery.unique(productIds);
-                Webster.MessageProcessor.processOutgoing({'type': 'Catalog\\Category', 'action': 'save', 'content': {
-                    'id': categories[i].id,
-                    'name': categories[i].name,
-                    'products': categories[i].products,
-                    'active': categories[i].active
-                }});
             }
 
-            if(!productId) productId = '';
+            productCategories = Ember.A();
+            for(i = 0; i < categories.length; i++){
+                if(categories[i].checked){
+                    productCategories.push(categories[i].id);
+                }
+            }
 
             Webster.MessageProcessor.processOutgoing({'type': 'Catalog\\Product', 'action': 'save', 'content': {
                 'id': productId,
@@ -55,7 +62,8 @@ Webster.CatalogProductController = Ember.ObjectController.extend({
                 'price': this.get('product').price,
                 'inventory': this.get('product').inventory,
                 'image': this.get('product').image,
-                'active': this.get('product').active
+                'active': this.get('product').active,
+                'categories': productCategories
             }});
         }
     }
