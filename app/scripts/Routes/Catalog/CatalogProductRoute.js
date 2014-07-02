@@ -1,14 +1,14 @@
 Webster.CatalogProductRoute = Webster.AbstractRoute.extend({
     setupController: function(controller, model){
         var productId = model.id;
-        if(productId){
-            Webster.MessageProcessor.processOutgoing({'type': 'Catalog\\Product', 'action': 'get', 'content': {'product_id': productId}});
+        if(typeof productId !== 'undefined' && productId !== 'undefined'){
+            console.log('oida');
+            Webster.MessageProcessor.processOutgoing({'type': 'catalog/backend_product', 'action': 'edit', 'content': {'product_id': productId}});
         } else {
-            var products = Ember.A();
-            products.addObject(Webster.Product.create());
-            Webster.Session.set('productCollection', products);
+            console.log('mann');
+            Webster.MessageProcessor.processOutgoing({'type': 'catalog/backend_product', 'action': 'edit'});
+            Webster.Session.set('product', Webster.Product.create());
         }
-        Webster.MessageProcessor.processOutgoing({'type': 'Catalog\\Category', 'action': 'get'});
         console.log('catalog product route');
     }
 });

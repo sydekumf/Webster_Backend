@@ -17,19 +17,16 @@ Webster.MessageProcessor = Ember.Object.create({
      * @returns {void}
      */
     processIncoming: function(rawMessage) {
-        var messageContent = JSON.parse(rawMessage.data);
+        var messageData = JSON.parse(rawMessage.data);
 
-        var message = null;
-        try{
-            console.log('Receiving message: ' + JSON.stringify(messageContent));
-            message = Webster.ReceiveMsg[messageContent.type].create(messageContent);
-        }catch (e){
-            Ember.warn("Unknown message type: " + messageContent.type);
-        }
-        if(message){
-            message.process();
-        }
+        console.log('%c => Receiving message: ', 'background: #369a42; color: #fff');
+        console.log(JSON.stringify(messageData));
 
+        content = messageData.content;
+
+        for(var key in content){
+            Webster.Session.set(key, content[key]);
+        }
     },
 
     /**
@@ -40,7 +37,8 @@ Webster.MessageProcessor = Ember.Object.create({
      */
     processOutgoing: function(message) {
         if(typeof message === 'object') {
-            console.log('Sending message: ' + JSON.stringify(message));
+            console.log('%c <= Sending message: ', 'background: #cc4a4d; color: #fff');
+            console.log(JSON.stringify(message));
             Webster.Socket.sendMessage(JSON.stringify(message));
         }
     }
