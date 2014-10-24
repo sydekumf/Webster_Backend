@@ -7,22 +7,25 @@ Webster.CatalogProductController = Ember.ObjectController.extend({
 
     categories: function(){
         var categories = Webster.Session.get('categories');
-        var product = this.get('product');
-        if(categories && product){
-            for(i = 0; i < categories.length; i++){
-                if(jQuery.inArray(product.id, categories[i].products) >= 0){
-                    categories[i].checked = true;
-                } else {
-                    categories[i].checked = false;
-                }
-            }
+//        var product = this.get('product');
+//        if(categories && product){
+//            for(i = 0; i < categories.length; i++){
+//                categories[i].checked = false;
+//                products = categories[i].products;
+//                for(j = 0; j < products.length; j++){
+//                    if(products[j].id == product.id){
+//                        categories[i].checked = true;
+//                        break;
+//                    }
+//                }
+//            }
             return categories;
-        }
+//        }
     }.property('Webster.Session.categories'),
 
     actions: {
         save: function(){
-            Webster.MessageProcessor.processOutgoing({'type': 'catalog/backend_product', 'action': 'save', 'content': {
+            Webster.MessageProcessor.processOutgoing({'type': 'catalog/product', 'action': 'save', 'content': {
                 'product': this.get('product'),
                 'categories': this.get('categories')
             }});
